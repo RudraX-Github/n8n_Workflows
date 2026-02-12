@@ -1,0 +1,248 @@
+{
+  "name": "Parallal_flow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "PDF_paper_code",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "data",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "deb08925-7d95-4cde-b700-d40f6bf63759",
+      "name": "On form submission",
+      "webhookId": "0f0fcc2f-faa5-454e-b9bc-a783fdcf4489"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "71461fc4-b4f6-44c4-ad10-0b8a008a295f",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=  Based on text of the file. generate starter code for the framework which can help me get goingso that i can implement it for the first time.\n\ntext : {{ $json.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        432,
+        224
+      ],
+      "id": "98dd64c3-3a3e-44c0-9258-bed4a4e7c8af",
+      "name": "Code Summarizer"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        512,
+        384
+      ],
+      "id": "32894678-2d46-4451-8b1b-8e78ae502209",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ebI1YNpW3j0xJGPC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        496,
+        -16
+      ],
+      "id": "27aede15-8ba5-48b0-91aa-64a986755314",
+      "name": "Papaer Summarizer",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ebI1YNpW3j0xJGPC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the text of the file. generate a 300 words summary of it. The language should be easy or understand.\n\ntext:  {{ $json.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        432,
+        -176
+      ],
+      "id": "fe06c277-565f-4385-a135-a25a56f82665",
+      "name": "Paper Summarizer"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        48
+      ],
+      "id": "d5392c8a-b1ce-4233-b6a3-1ae23f4af482",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "https://docs.google.com/document/d/1ZOrx1WUAXIh4RQqeQi6VlEIBDqeUHePF41hbUxWsQkA/edit?usp=sharing",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.text }}{{ $('Paper Summarizer').item.json.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        992,
+        48
+      ],
+      "id": "5042ad7b-48c0-44c0-b73f-bd733add39f6",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "MyFjORvwHQCFGEXE",
+          "name": "Google Docs account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code Summarizer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Paper Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Code Summarizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Papaer Summarizer": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Paper Summarizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paper Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "79aadd3f-f1cd-427f-bacb-1cc859fb9666",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48711374b5f215ca3eb37835d3df4caf086062bb53721c660807f922b5451944"
+  },
+  "id": "Yy80x8wr7Xjk2Iet28lA3",
+  "tags": []
+}

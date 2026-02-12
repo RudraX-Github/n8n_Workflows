@@ -1,0 +1,154 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI learning Coach - Get Your Personalized ROadmap",
+        "formDescription": "Tell us what you want to learn, and we'll create custom learning path for you!",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "topic"
+            },
+            {
+              "fieldLabel": "current_level",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Beginner"
+                  },
+                  {
+                    "option": "Intermediate"
+                  },
+                  {
+                    "option": "Advanced"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "time_commitments (hrs/day)",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Duration (in weeks)",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Generate my Road Map"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -560,
+        -32
+      ],
+      "id": "0ca9aeaa-4e5a-40fe-897c-39a5430257df",
+      "name": "On form submission",
+      "webhookId": "8e108588-7ea3-41a7-8913-a818db9fde1b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert learning coach who creates comprehensive, structured learning roadmaps.\n\ncreate a detailed learning roadmap for the ffollowins :\n** Topic: ** {{ $json.topic }}\n** Current Skill level: ** {{ $json.current_level }}\n**Daily Time Commitment: **  {{ $json['time_commitments (hrs/day)'] }}\n** Total Duration: ** {{ $json['Duration (in weeks)']}} weeks\n\nPlaese structured the roadmao as follows :\n\n## Learning Path Overview\n\nprovide a brief 2-3 sentence overview of what the learner will achieve and why this learning path is structure this way\n\n##Learning Phases\n\n###Phase 1: Beginner Fundamentals (Weeks 1-2) List 6-8 core foundational topics with:\nTopic name\nBrief 1-line description\n- Estimated time to learn\n\n### Phase 2: Intermediate Concepts (Weeks 3-4) List 6-8 intermediate topics building on the fundamentals\n\n### Phase 3: Advanced Topics (Weeks 5-6) List 6-8 advanced concepts and real-world applications\n\n##Suggested Daily Schedule\n\nBreak down how to structure each day:\nTime allocation per activity\nDaily goals\nWeekly milestones\n\n##Milestone Checkpoints\nDefine 3-4 key checkpoints where the learner should:\nTest their knowledge\nBuild a small project\nReview and consolidate learning\n\n#Recommended Resources\nSuggest 5-7 high-quality resources:\nOfficial documentation\nVideo tutorials\nBooks\nPractice platforms\nCommunity forums\n\n## Pro Tips\n3-5 practical tips for successful learning in this domain\n\nFormat your responses in clean readable markdown with proper header bullet points and emojis for visual appeal.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -352,
+        -32
+      ],
+      "id": "18b136b9-3fe5-465a-91f2-36ac848999c2",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 2000,
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        128
+      ],
+      "id": "5556f71c-e0d4-4dd7-9402-3b85e7a848c2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wNs5vsMyGgrCBUhR",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Email": "demo@gmail.com",
+          "topic": "Model Context Protocol",
+          "current_level": "Beginner",
+          "time_commitments (hrs/day)": 2,
+          "Duration (in weeks)": 5,
+          "submittedAt": "2026-01-30T05:32:17.913-05:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "854c6628-66da-45f9-983e-a9d27c58260b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48711374b5f215ca3eb37835d3df4caf086062bb53721c660807f922b5451944"
+  },
+  "id": "hABJD2sEp32wt1POP4G3Z",
+  "tags": []
+}

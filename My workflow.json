@@ -1,0 +1,44 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "registration",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c8f58f51-2a7f-4445-a3be-51cb0b2c2c7d",
+      "name": "On form submission",
+      "webhookId": "05dd1619-2e24-44e9-a0ff-0dc495ce0466"
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "1eb9187c-b437-41ec-83cf-2d4ef4ca2460",
+  "meta": {
+    "instanceId": "48711374b5f215ca3eb37835d3df4caf086062bb53721c660807f922b5451944"
+  },
+  "id": "3Loa16cioWtdHZm02VDaM",
+  "tags": []
+}

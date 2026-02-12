@@ -1,0 +1,47 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Submission Form",
+        "formDescription": "Submission Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Topic",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ff81a96f-42c9-4a6b-ab32-6294d50de0fb",
+      "name": "On form submission",
+      "webhookId": "bb515077-a976-4bfd-b5e7-441810fecb1d"
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "c5e1c506-aff6-4982-b8b2-c8f1f7ae3182",
+  "meta": {
+    "instanceId": "48711374b5f215ca3eb37835d3df4caf086062bb53721c660807f922b5451944"
+  },
+  "id": "mVvTcKEHMseqMtroWDgsV",
+  "tags": []
+}

@@ -1,0 +1,224 @@
+{
+  "name": "IF/ELSE",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        -64
+      ],
+      "id": "965128e9-a05c-4fe4-a1c5-a6c5be53f190",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Name\": [\"John\", \"Beth\", \"Sem\"],\n  \"Age\": [25,19,43],\n  \"Order_amount\" : [3,8,13]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        -64
+      ],
+      "id": "f2c07df9-aa9f-4908-a450-e1c941d894b0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "Name, Age, Order_amount",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -64
+      ],
+      "id": "baecab4c-3a47-462a-bfdd-03fc650c73f0",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "13f0fab2-fa81-45c3-ab77-30cdb94fe910",
+              "leftValue": "={{ $json.Order_amount }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        -64
+      ],
+      "id": "e8baf4c3-da29-4a28-b9a2-739da2ae29fc",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        160,
+        64
+      ],
+      "id": "4b41e8e1-a9a9-4c23-b053-402b2c927704",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-image",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-image (Nano Banana)"
+        },
+        "prompt": "Generate a discount coupon with \"20% FLAT DISCOUNT\" written clearly for an electronics store.  \nThe image should include a laptop, headphone, and mobile phone in the coupon.  \nDesign should be simple and elegant with text in a clear format.  \n\nCoupon Details:  \n- Issue Date: [Insert current date at time of generation]  \n- Valid Till: [Insert date 30 days after issue date]  \n",
+        "options": {
+          "sampleCount": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        -160
+      ],
+      "id": "578d2923-ea52-4bd3-b024-301a4af9a682",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ebI1YNpW3j0xJGPC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "kddeveloper324@gmail.com",
+        "subject": "Discount Coupon",
+        "message": "Please check your discount coupon in the attached image.",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        -160
+      ],
+      "id": "a461be68-4089-48cb-b084-8b9aa20e2760",
+      "name": "Send a message",
+      "webhookId": "d5ef21a5-1c76-4a35-a293-0da6a39edba2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0L3aVjxQAlVxxJNT",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f11739b2-b3e6-467a-93dc-fd1312eaf0d4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48711374b5f215ca3eb37835d3df4caf086062bb53721c660807f922b5451944"
+  },
+  "id": "VmqXAmF7Bldm7fd5yknYE",
+  "tags": []
+}

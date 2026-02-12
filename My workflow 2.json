@@ -1,0 +1,189 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -912,
+        -256
+      ],
+      "id": "d7d420ad-1a0a-4fe0-a996-d4ad542bc43d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        208
+      ],
+      "id": "87c40b78-0dee-4052-96c5-a4e51530b5d5",
+      "name": "Google Gemini Chat Model",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZUr05nnLal3BEWyQ",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -864,
+        224
+      ],
+      "id": "60091e3a-72c3-4e96-b4d6-dfc8aa2f6602",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "\"Retrieve and read email content. Input should be a search query ( 'subject:\"Your Personalized Learning Roadmap\"). The tool returns the full email body text, which you must analyze to answer user questions about the email's content.\"",
+        "operation": "getAll",
+        "limit": 10,
+        "filters": {
+          "q": "subject:\"Your Personalized Learning Roadmap\""
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -704,
+        224
+      ],
+      "id": "bac9dde3-fe04-4183-b1e6-bc130db0ab2e",
+      "name": "GetGmail",
+      "webhookId": "b8991ab8-ae1e-4931-8925-13965257cec4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FsQzHkENeU9Vbsdi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        208
+      ],
+      "id": "65951d2f-4b29-4716-88e2-cd685ef5fd03",
+      "name": "SendGmail1",
+      "webhookId": "c6fd3a9e-2c2d-4522-8ed3-1a032f0c03aa",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FsQzHkENeU9Vbsdi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1584,
+        -256
+      ],
+      "id": "4b8adae4-0542-41f7-8b4a-1ad5b8477784",
+      "name": "When chat message received",
+      "webhookId": "42db2570-131c-47ee-827d-7495dbdfeb4a"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetGmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendGmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "47a4e8f5-5ff1-45ff-8b61-ec98228bbfd4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "20a6262624cf0246b3fb0f7da34ea23f194ab9557d7364194412e864c0a7c7e4"
+  },
+  "id": "fyPZU9XvNmOzUpjz5ulRa",
+  "tags": []
+}
